@@ -36,7 +36,9 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
 
     public <T extends RealmObject> RealmResults<T> getInner(Class clazz, Func1<RealmQuery, RealmQuery> predicate) {
         RealmQuery query = realm.where(clazz);
-        return predicate.call(query).findAll();
+        if (predicate != null)
+            query = predicate.call(query);
+        return query.findAll();
     }
 
     @Override
