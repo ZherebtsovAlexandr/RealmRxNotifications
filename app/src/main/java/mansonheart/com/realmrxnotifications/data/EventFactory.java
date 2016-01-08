@@ -8,7 +8,7 @@ import java.util.Random;
 /**
  * Created by Zherebtsov Alexandr on 08.01.2016.
  */
-public class EventGenerator {
+public class EventFactory {
 
     private static final int COUNT_DEFAULT_CATEGORIES = 3;
     private static final int COUNT_DEFAULT_EVENTS = 3;

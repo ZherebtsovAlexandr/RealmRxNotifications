@@ -3,7 +3,7 @@ package mansonheart.com.realmrxnotifications.interactor;
 import java.util.List;
 
 import mansonheart.com.database.RealmAccessLayer;
-import mansonheart.com.realmrxnotifications.data.EventGenerator;
+import mansonheart.com.realmrxnotifications.data.EventFactory;
 import mansonheart.com.realmrxnotifications.model.Event;
 import rx.Observable;
 
@@ -23,7 +23,7 @@ public class EventProvider {
     }
 
     public void addEvent() {
-        realmAccessLayer.storeObject(Event.class, EventGenerator.getEvent());
+        realmAccessLayer.storeObject(Event.class, EventFactory.getEvent());
     }
 
 }
