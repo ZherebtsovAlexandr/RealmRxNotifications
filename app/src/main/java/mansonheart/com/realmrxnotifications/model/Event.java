@@ -1,4 +1,4 @@
-package mansonheart.com.realmrxnotifications.data;
+package mansonheart.com.realmrxnotifications.model;
 
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
