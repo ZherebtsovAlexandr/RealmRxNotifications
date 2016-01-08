@@ -11,8 +11,7 @@ import java.util.Collections;
 import java.util.List;
 
 import mansonheart.com.realmrxnotifications.R;
-import mansonheart.com.realmrxnotifications.data.Event;
-import rx.functions.Action1;
+import mansonheart.com.realmrxnotifications.model.Event;
 
 /**
  * Created by Zherebtsov Alexandr on 08.01.2016.

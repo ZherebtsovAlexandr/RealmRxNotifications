@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import mansonheart.com.realmrxnotifications.App;
 import mansonheart.com.realmrxnotifications.R;
-import mansonheart.com.realmrxnotifications.data.Event;
+import mansonheart.com.realmrxnotifications.model.Event;
 import mansonheart.com.realmrxnotifications.di.components.DaggerEventsComponent;
 import mansonheart.com.realmrxnotifications.di.components.EventsComponent;
 import mansonheart.com.realmrxnotifications.presenter.EventsPresenter;
