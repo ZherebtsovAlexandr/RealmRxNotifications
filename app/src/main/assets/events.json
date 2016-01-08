@@ -1,0 +1,36 @@
+{
+  "events": [
+    {
+      "eventId": 0,
+      "title": "Great Russian Nutcracker",
+      "category": {
+        "categoryId": 0,
+        "name": "Art"
+      }
+    },
+    {
+      "eventId": 1,
+      "title": "Rock live 2016",
+      "category": {
+        "categoryId": 2,
+        "name": "Concerts"
+      }
+    },
+    {
+      "eventId": 2,
+      "title": "Marathon",
+      "category": {
+        "categoryId": 1,
+        "name": "Sport"
+      }
+    },
+    {
+      "eventId": 3,
+      "title": "Swimming competition",
+      "category": {
+        "categoryId": 1,
+        "name": "Sport"
+      }
+    }
+  ]
+}

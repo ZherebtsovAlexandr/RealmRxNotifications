@@ -1,13 +1,10 @@
 package mansonheart.com.realmrxnotifications.interactor;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
-import java.util.Random;
 
 import mansonheart.com.database.RealmAccessLayer;
-import mansonheart.com.realmrxnotifications.data.Event;
+import mansonheart.com.realmrxnotifications.data.EventGenerator;
+import mansonheart.com.realmrxnotifications.model.Event;
 import rx.Observable;
 
 /**
@@ -26,13 +23,7 @@ public class EventProvider {
     }
 
     public void addEvent() {
-        Random r = new Random();
-        int id = r.nextInt(99999);
-        try {
-            realmAccessLayer.storeObject(Event.class, new JSONObject("{eventId: " + id + ", title: \"Event" + id + "\"}"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        realmAccessLayer.storeObject(Event.class, EventGenerator.getEvent());
     }
 
 }

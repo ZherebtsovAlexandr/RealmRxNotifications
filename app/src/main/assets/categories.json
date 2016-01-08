@@ -1,0 +1,16 @@
+{
+  "categories": [
+    {
+      "categoryId": 0,
+      "name": "Art"
+    },
+    {
+      "categoryId": 1,
+      "name": "Sport"
+    },
+    {
+      "categoryId": 2,
+      "name": "Concerts"
+    }
+  ]
+}
