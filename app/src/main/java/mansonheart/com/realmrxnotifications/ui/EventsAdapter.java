@@ -17,7 +17,7 @@ import rx.functions.Action1;
 /**
  * Created by Zherebtsov Alexandr on 08.01.2016.
  */
-public final class EventsAdapter extends BaseAdapter implements Action1<List<Event>> {
+public final class EventsAdapter extends BaseAdapter {
     private final LayoutInflater inflater;
 
     private List<Event> items = Collections.emptyList();
@@ -26,8 +26,7 @@ public final class EventsAdapter extends BaseAdapter implements Action1<List<Eve
         inflater = LayoutInflater.from(context);
     }
 
-    @Override
-    public void call(List<Event> items) {
+    public void setItems(List<Event> items) {
         this.items = items;
         notifyDataSetChanged();
     }
