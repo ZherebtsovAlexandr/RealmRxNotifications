@@ -10,13 +10,13 @@ import rx.subscriptions.CompositeSubscription;
  */
 public abstract class RxBasePresenter<V extends MvpView> extends MvpBasePresenter<V> {
 
-    CompositeSubscription subscription;
+    CompositeSubscription compositeSubscription;
 
     protected void unsubscribe() {
-        if (subscription != null && !subscription.isUnsubscribed()) {
-            subscription.unsubscribe();
+        if (compositeSubscription != null && !compositeSubscription.isUnsubscribed()) {
+            compositeSubscription.unsubscribe();
         }
-        subscription = null;
+        compositeSubscription = null;
     }
 
     @Override
