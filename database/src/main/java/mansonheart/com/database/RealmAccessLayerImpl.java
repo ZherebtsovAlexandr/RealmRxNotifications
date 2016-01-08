@@ -1,7 +1,5 @@
 package mansonheart.com.database;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -46,9 +44,7 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
         realm.beginTransaction();
         realm.createOrUpdateObjectFromJson(clazz, jsonObject);
         realm.commitTransaction();
-        Observable.from(realmQueryCollection.getQuerables(clazz))
-                .subscribe(realmQuerable ->
-                        realmQuerable.getSubject().onNext(getInner(clazz, realmQuerable.getPredicate())));
+        callObservers(clazz);
 
     }
 
@@ -57,7 +53,9 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
         realm.beginTransaction();
         realm.createOrUpdateAllFromJson(clazz, jsonArray);
         realm.commitTransaction();
+        callObservers(clazz);
     }
+
 
     @Override
     public <T> Observable<T> update(Class clazz, Action0 action) {
@@ -66,6 +64,13 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
             action.call();
         }).doOnNext(o -> {
             realm.commitTransaction();
+            callObservers(clazz);
         });
+    }
+
+    private void callObservers(Class clazz) {
+        Observable.from(realmQueryCollection.getQuerables(clazz))
+                .subscribe(realmQuerable ->
+                        realmQuerable.getSubject().onNext(getInner(clazz, realmQuerable.getPredicate())));
     }
 }
