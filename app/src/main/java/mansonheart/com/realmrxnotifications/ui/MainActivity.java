@@ -42,6 +42,8 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
         setContentView(R.layout.activity_main);
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
+        eventsAdapter = new EventsAdapter(this);
+        listView.setAdapter(eventsAdapter);
         fab.setOnClickListener(view -> presenter.addEvent());
     }
 
