@@ -20,6 +20,12 @@ public abstract class RxBasePresenter<V extends MvpView> extends MvpBasePresente
     }
 
     @Override
+    public void attachView(V view) {
+        super.attachView(view);
+        compositeSubscription = new CompositeSubscription();
+    }
+
+    @Override
     public void detachView(boolean retainInstance) {
         super.detachView(retainInstance);
         unsubscribe();
