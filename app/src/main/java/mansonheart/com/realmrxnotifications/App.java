@@ -3,6 +3,7 @@ package mansonheart.com.realmrxnotifications;
 import android.app.Application;
 
 import mansonheart.com.realmrxnotifications.di.components.AppComponent;
+import mansonheart.com.realmrxnotifications.di.components.DaggerAppComponent;
 import mansonheart.com.realmrxnotifications.di.module.AppModule;
 import mansonheart.com.realmrxnotifications.di.module.RealmModule;
 
