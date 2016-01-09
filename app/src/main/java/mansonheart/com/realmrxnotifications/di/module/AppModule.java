@@ -5,8 +5,8 @@ import android.content.Context;
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
-import mansonheart.com.database.RealmAccessLayer;
-import mansonheart.com.database.RealmAccessLayerImpl;
+import mansonheart.com.database.RealmRepository;
+import mansonheart.com.database.RealmRepositoryImpl;
 import mansonheart.com.realmrxnotifications.App;
 import mansonheart.com.realmrxnotifications.di.scope.PerApplication;
 
@@ -30,7 +30,7 @@ public class AppModule {
 
     @PerApplication
     @Provides
-    RealmAccessLayer provideRealmLocalService(Realm realm) {
-        return new RealmAccessLayerImpl(realm);
+    RealmRepository provideRealmLocalService(Realm realm) {
+        return new RealmRepositoryImpl(realm);
     }
 }

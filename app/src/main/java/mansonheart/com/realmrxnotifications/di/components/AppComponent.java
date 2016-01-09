@@ -4,7 +4,7 @@ import android.content.Context;
 
 import dagger.Component;
 import io.realm.Realm;
-import mansonheart.com.database.RealmAccessLayer;
+import mansonheart.com.database.RealmRepository;
 import mansonheart.com.realmrxnotifications.App;
 import mansonheart.com.realmrxnotifications.di.module.AppModule;
 import mansonheart.com.realmrxnotifications.di.scope.PerApplication;
@@ -20,5 +20,5 @@ public interface AppComponent {
     void inject(App app);
     Context context();
     Realm realm();
-    RealmAccessLayer realmAccessLayer();
+    RealmRepository realmAccessLayer();
 }

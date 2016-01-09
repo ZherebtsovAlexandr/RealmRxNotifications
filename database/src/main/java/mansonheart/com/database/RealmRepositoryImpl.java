@@ -15,12 +15,12 @@ import rx.subjects.BehaviorSubject;
 /**
  * Created by Zherebtsov Alexandr on 07.01.2016.
  */
-public class RealmAccessLayerImpl implements RealmAccessLayer {
+public class RealmRepositoryImpl implements RealmRepository {
 
     Realm realm;
     RealmQueryableCollection realmQueryCollection;
 
-    public RealmAccessLayerImpl(Realm realm) {
+    public RealmRepositoryImpl(Realm realm) {
         this.realm = realm;
         this.realmQueryCollection = new RealmQueryableCollection();
     }
@@ -44,7 +44,7 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
         realm.beginTransaction();
         realm.createOrUpdateObjectFromJson(clazz, jsonObject);
         realm.commitTransaction();
-        callObservers(clazz);
+        notifyObservers(clazz);
 
     }
 
@@ -53,7 +53,7 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
         realm.beginTransaction();
         realm.createOrUpdateAllFromJson(clazz, jsonArray);
         realm.commitTransaction();
-        callObservers(clazz);
+        notifyObservers(clazz);
     }
 
 
@@ -64,11 +64,11 @@ public class RealmAccessLayerImpl implements RealmAccessLayer {
             action.call();
         }).doOnNext(o -> {
             realm.commitTransaction();
-            callObservers(clazz);
+            notifyObservers(clazz);
         });
     }
 
-    private void callObservers(Class clazz) {
+    private void notifyObservers(Class clazz) {
         Observable.from(realmQueryCollection.getQuerables(clazz))
                 .subscribe(realmQuerable ->
                         realmQuerable.getSubject().onNext(getInner(clazz, realmQuerable.getPredicate())));

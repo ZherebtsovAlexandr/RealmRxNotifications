@@ -2,7 +2,7 @@ package mansonheart.com.realmrxnotifications.di.module;
 
 import dagger.Module;
 import dagger.Provides;
-import mansonheart.com.database.RealmAccessLayer;
+import mansonheart.com.database.RealmRepository;
 import mansonheart.com.realmrxnotifications.di.scope.PerActivity;
 import mansonheart.com.realmrxnotifications.interactor.EventProvider;
 
@@ -14,7 +14,7 @@ import mansonheart.com.realmrxnotifications.interactor.EventProvider;
 public class EventsModule {
     @Provides
     @PerActivity
-    EventProvider provideEventProvider(RealmAccessLayer realmAccessLayer) {
-        return new EventProvider(realmAccessLayer);
+    EventProvider provideEventProvider(RealmRepository realmRepository) {
+        return new EventProvider(realmRepository);
     }
 }

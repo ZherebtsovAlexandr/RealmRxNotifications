@@ -2,7 +2,7 @@ package mansonheart.com.realmrxnotifications.interactor;
 
 import java.util.List;
 
-import mansonheart.com.database.RealmAccessLayer;
+import mansonheart.com.database.RealmRepository;
 import mansonheart.com.realmrxnotifications.data.EventFactory;
 import mansonheart.com.realmrxnotifications.model.Event;
 import rx.Observable;
@@ -12,18 +12,18 @@ import rx.Observable;
  */
 public class EventProvider {
 
-    private RealmAccessLayer realmAccessLayer;
+    private RealmRepository realmRepository;
 
-    public EventProvider(RealmAccessLayer realmAccessLayer) {
-        this.realmAccessLayer = realmAccessLayer;
+    public EventProvider(RealmRepository realmRepository) {
+        this.realmRepository = realmRepository;
     }
 
     public Observable<List<Event>> getEvents() {
-        return realmAccessLayer.get(Event.class, predicate -> predicate.isNotNull("category"));
+        return realmRepository.get(Event.class, predicate -> predicate.isNotNull("category"));
     }
 
     public void addEvent() {
-        realmAccessLayer.storeObject(Event.class, EventFactory.getEvent());
+        realmRepository.storeObject(Event.class, EventFactory.getEvent());
     }
 
 }
