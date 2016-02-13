@@ -2,6 +2,9 @@ package mansonheart.com.realmrxnotifications.di.module;
 
 import android.content.Context;
 
+
+import javax.inject.Provider;
+
 import dagger.Module;
 import dagger.Provides;
 import io.realm.Realm;
@@ -30,7 +33,7 @@ public class AppModule {
 
     @PerApplication
     @Provides
-    RealmRepository provideRealmLocalService(Realm realm) {
-        return new RealmRepositoryImpl(realm);
+    RealmRepository provideRealmLocalService(Provider<Realm> realmProvider) {
+        return new RealmRepositoryImpl(realmProvider);
     }
 }

@@ -3,6 +3,8 @@ package mansonheart.com.database;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.inject.Provider;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
@@ -17,11 +19,11 @@ import rx.subjects.BehaviorSubject;
  */
 public class RealmRepositoryImpl implements RealmRepository {
 
-    Realm realm;
+    Provider<Realm> realmProvider;
     RealmQueryableCollection realmQueryCollection;
 
-    public RealmRepositoryImpl(Realm realm) {
-        this.realm = realm;
+    public RealmRepositoryImpl(Provider<Realm> realmProvider) {
+        this.realmProvider = realmProvider;
         this.realmQueryCollection = new RealmQueryableCollection();
     }
 
@@ -33,26 +35,26 @@ public class RealmRepositoryImpl implements RealmRepository {
     }
 
     public <T extends RealmObject> RealmResults<T> getInner(Class clazz, Func1<RealmQuery, RealmQuery> predicate) {
-        RealmQuery query = realm.where(clazz);
+        RealmQuery query = getRealm().where(clazz);
         if (predicate != null)
             query = predicate.call(query);
-        return query.findAll();
+        return query.findAllAsync();
     }
 
     @Override
     public void storeObject(Class clazz, JSONObject jsonObject) {
-        realm.beginTransaction();
-        realm.createOrUpdateObjectFromJson(clazz, jsonObject);
-        realm.commitTransaction();
+        getRealm().beginTransaction();
+        getRealm().createOrUpdateObjectFromJson(clazz, jsonObject);
+        getRealm().commitTransaction();
         notifyObservers(clazz);
 
     }
 
     @Override
     public void storeObjects(Class clazz, JSONArray jsonArray) {
-        realm.beginTransaction();
-        realm.createOrUpdateAllFromJson(clazz, jsonArray);
-        realm.commitTransaction();
+        getRealm().beginTransaction();
+        getRealm().createOrUpdateAllFromJson(clazz, jsonArray);
+        getRealm().commitTransaction();
         notifyObservers(clazz);
     }
 
@@ -60,10 +62,10 @@ public class RealmRepositoryImpl implements RealmRepository {
     @Override
     public <T> Observable<T> update(Class clazz, Action0 action) {
         return (Observable<T>) Observable.create(subscriber -> {
-            realm.beginTransaction();
+            getRealm().beginTransaction();
             action.call();
         }).doOnNext(o -> {
-            realm.commitTransaction();
+            getRealm().commitTransaction();
             notifyObservers(clazz);
         });
     }
@@ -72,5 +74,9 @@ public class RealmRepositoryImpl implements RealmRepository {
         Observable.from(realmQueryCollection.getQuerables(clazz))
                 .subscribe(realmQuerable ->
                         realmQuerable.getSubject().onNext(getInner(clazz, realmQuerable.getPredicate())));
+    }
+
+    private Realm getRealm() {
+        return realmProvider.get();
     }
 }
