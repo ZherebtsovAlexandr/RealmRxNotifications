@@ -49,5 +49,5 @@ dependencies {
     compile 'com.hannesdorfmann.mosby:mvp:2.0.0'
     /* UI */
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile project(':database')
+    compile project(':data')
 }
