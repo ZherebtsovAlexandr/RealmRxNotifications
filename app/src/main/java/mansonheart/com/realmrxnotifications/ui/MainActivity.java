@@ -15,9 +15,9 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import mansonheart.com.realmrxnotifications.App;
 import mansonheart.com.realmrxnotifications.R;
-import mansonheart.com.realmrxnotifications.model.Event;
 import mansonheart.com.realmrxnotifications.di.components.DaggerEventsComponent;
 import mansonheart.com.realmrxnotifications.di.components.EventsComponent;
+import mansonheart.com.realmrxnotifications.model.Event;
 import mansonheart.com.realmrxnotifications.presenter.EventsPresenter;
 import mansonheart.com.realmrxnotifications.presenter.EventsView;
 
@@ -50,7 +50,14 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
     @Override
     protected void onResume() {
         super.onResume();
+        presenter.onResume();
         presenter.loadEvents();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.onStop();
     }
 
     @NonNull

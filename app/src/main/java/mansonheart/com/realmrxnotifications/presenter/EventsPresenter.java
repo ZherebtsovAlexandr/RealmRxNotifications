@@ -17,6 +17,8 @@ import rx.Subscriber;
 
 public class EventsPresenter extends MvpBasePresenter<EventsView> {
 
+    private Subscriber<List<Event>> getEventListSubscriber;
+    
     private final UseCase getEventListInteractor;
     private final UseCase addEventInteractor;
 
@@ -38,29 +40,31 @@ public class EventsPresenter extends MvpBasePresenter<EventsView> {
         addEventInteractor.execute(addEventSubscriber);
     }
 
-    private final Subscriber<List<Event>> getEventListSubscriber = new Subscriber<List<Event>>() {
+    private Subscriber<List<Event>> getEventListSubscriber() {
+        return new Subscriber<List<Event>>() {
 
-        @Override
-        public void onCompleted() {
+            @Override
+            public void onCompleted() {
 
-        }
-
-        @Override
-        public void onError(Throwable error) {
-            if (isViewAttached()) {
-                getView().showMessage(error.getMessage());
-                getView().hideLoading();
             }
-        }
 
-        @Override
-        public void onNext(List<Event> events) {
-            if (isViewAttached()) {
-                getView().hideLoading();
-                getView().eventsLoaded(events);
+            @Override
+            public void onError(Throwable error) {
+                if (isViewAttached()) {
+                    getView().showMessage(error.getMessage());
+                    getView().hideLoading();
+                }
             }
-        }
-    };
+
+            @Override
+            public void onNext(List<Event> events) {
+                if (isViewAttached()) {
+                    getView().hideLoading();
+                    getView().eventsLoaded(events);
+                }
+            }
+        };
+    }
 
     private final Subscriber addEventSubscriber = new Subscriber() {
         @Override
@@ -85,10 +89,13 @@ public class EventsPresenter extends MvpBasePresenter<EventsView> {
 
     };
 
-    @Override
-    public void detachView(boolean retainInstance) {
-        super.detachView(retainInstance);
+    public void onResume() {
+        this.getEventListSubscriber = getEventListSubscriber();
+    }
+
+    public void onStop() {
         getEventListInteractor.unsubscribe();
         addEventInteractor.unsubscribe();
     }
+
 }
