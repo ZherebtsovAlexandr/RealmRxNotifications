@@ -47,7 +47,6 @@ public class RealmRepositoryImpl implements RealmRepository {
         getRealm().createOrUpdateObjectFromJson(clazz, jsonObject);
         getRealm().commitTransaction();
         notifyObservers(clazz);
-
     }
 
     @Override
@@ -72,8 +71,15 @@ public class RealmRepositoryImpl implements RealmRepository {
 
     private void notifyObservers(Class clazz) {
         Observable.from(realmQueryCollection.getQuerables(clazz))
-                .subscribe(realmQuerable ->
-                        realmQuerable.getSubject().onNext(getInner(clazz, realmQuerable.getPredicate())));
+                .subscribe(realmQuerable -> {
+                    if (!realmQuerable.getSubject().hasObservers()) {
+                        realmQueryCollection.queryables.remove(realmQuerable);
+                    } else {
+                        RealmResults realmResults = getInner(clazz, realmQuerable.getPredicate());
+                        realmResults.load();
+                        realmQuerable.getSubject().onNext(realmResults);
+                    }
+                });
     }
 
     private Realm getRealm() {
