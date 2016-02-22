@@ -1,6 +1,7 @@
 package mansonheart.com.realmrxnotifications.di.components;
 
 import dagger.Component;
+import mansonheart.com.realmrxnotifications.ui.EventDetailsActivity;
 import mansonheart.com.realmrxnotifications.ui.MainActivity;
 import mansonheart.com.realmrxnotifications.di.module.EventsModule;
 import mansonheart.com.realmrxnotifications.di.scope.PerActivity;

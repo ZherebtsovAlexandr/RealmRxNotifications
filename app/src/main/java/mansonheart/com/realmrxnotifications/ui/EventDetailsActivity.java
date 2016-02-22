@@ -1,5 +1,7 @@
 package mansonheart.com.realmrxnotifications.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
@@ -7,7 +9,11 @@ import android.widget.Toast;
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import butterknife.ButterKnife;
+import mansonheart.com.realmrxnotifications.App;
 import mansonheart.com.realmrxnotifications.R;
+import mansonheart.com.realmrxnotifications.di.components.DaggerEventDetailComponent;
+import mansonheart.com.realmrxnotifications.di.components.EventDetailComponent;
+import mansonheart.com.realmrxnotifications.di.module.EventsModule;
 import mansonheart.com.realmrxnotifications.model.Event;
 import mansonheart.com.realmrxnotifications.presenter.EventDetailsPresenter;
 import mansonheart.com.realmrxnotifications.presenter.EventDetailsView;
@@ -18,12 +24,53 @@ import mansonheart.com.realmrxnotifications.presenter.EventDetailsView;
 public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDetailsPresenter>
         implements EventDetailsView {
 
+    private static final String INTENT_EXTRA_PARAM_EVENT_ID = "EVENT_ID";
+
+    private int eventId;
+    private EventDetailComponent component;
+
+    public static Intent getIntent(Context context, int eventId) {
+        Intent intent = new Intent(context, EventDetailsActivity.class);
+        intent.putExtra(INTENT_EXTRA_PARAM_EVENT_ID, eventId);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
+        this.eventId = getIntent().getIntExtra(INTENT_EXTRA_PARAM_EVENT_ID, -1);
         ButterKnife.inject(this);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.onResume();
+        presenter.loadEvent();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        presenter.onStop();
+    }
+
+    @NonNull
+    @Override
+    public EventDetailsPresenter createPresenter() {
+        injectDependencies();
+        return component.presenter();
+    }
+
+    private void injectDependencies() {
+        component = DaggerEventDetailComponent.builder()
+                .appComponent(App.getAppComponent())
+                .eventsModule(new EventsModule(this.eventId))
+                .build();
+        component.inject(this);
+    }
+
 
     @Override
     public void showLoading() {
@@ -43,11 +90,5 @@ public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDet
     @Override
     public void eventLoaded(Event event) {
 
-    }
-
-    @NonNull
-    @Override
-    public EventDetailsPresenter createPresenter() {
-        return null;
     }
 }
