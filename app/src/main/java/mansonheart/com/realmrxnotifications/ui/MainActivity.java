@@ -11,6 +11,8 @@ import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import mansonheart.com.realmrxnotifications.App;
@@ -36,6 +38,9 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
     @InjectView(R.id.fab)
     FloatingActionButton fab;
 
+    @Inject
+    Navigator navigator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,7 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
         eventsAdapter = new EventsAdapter(this);
-        eventsAdapter.setOnItemClickListener(event -> presenter.onEventClicked(event));
+        eventsAdapter.setOnItemClickListener(event -> onEventClicked(event));
         listView.setAdapter(eventsAdapter);
         fab.setOnClickListener(view -> presenter.addEvent());
     }
@@ -93,6 +98,10 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
     @Override
     public void eventsLoaded(List<Event> events) {
         eventsAdapter.setItems(events);
+    }
+
+    private void onEventClicked(Event event) {
+        this.navigator.navigateToEventDetails(this, event.getEventId());
     }
 
 }
