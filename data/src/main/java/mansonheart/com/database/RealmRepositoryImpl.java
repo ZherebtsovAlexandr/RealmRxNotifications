@@ -31,11 +31,12 @@ public class RealmRepositoryImpl implements RealmRepository {
     @Override
     public <T> Observable<T> get(Class clazz, Func1<RealmQuery, RealmQuery> predicate) {
         RealmResults results = getInner(clazz, predicate);
-        BehaviorSubject<T> behaviorSubject = BehaviorSubject.create((T) results);
+        results.load();
+        BehaviorSubject<T> behaviorSubject = BehaviorSubject.create((T) getRealm().copyFromRealm(results));
         RealmChangeListener realmChangeListener = () -> {
             RealmResults realmResults = getInner(clazz, predicate);
             realmResults.load();
-            behaviorSubject.onNext((T) realmResults);
+            behaviorSubject.onNext((T) getRealm().copyFromRealm(realmResults));
         };
         results.addChangeListener(realmChangeListener);
         realmQueryCollection.add(clazz, predicate, realmChangeListener, behaviorSubject);
