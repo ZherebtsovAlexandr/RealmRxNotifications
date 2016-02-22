@@ -18,7 +18,7 @@ import rx.Subscriber;
 public class EventsPresenter extends MvpBasePresenter<EventsView> {
 
     private Subscriber<List<Event>> getEventListSubscriber;
-    
+
     private final UseCase getEventListInteractor;
     private final UseCase addEventInteractor;
 
@@ -38,6 +38,21 @@ public class EventsPresenter extends MvpBasePresenter<EventsView> {
 
     public void addEvent() {
         addEventInteractor.execute(addEventSubscriber);
+    }
+
+    public void onEventClicked(Event event) {
+        if (isViewAttached()) {
+            getView().showMessage(event.getTitle());
+        }
+    }
+
+    public void onResume() {
+        this.getEventListSubscriber = getEventListSubscriber();
+    }
+
+    public void onStop() {
+        getEventListInteractor.unsubscribe();
+        addEventInteractor.unsubscribe();
     }
 
     private Subscriber<List<Event>> getEventListSubscriber() {
@@ -88,14 +103,5 @@ public class EventsPresenter extends MvpBasePresenter<EventsView> {
         }
 
     };
-
-    public void onResume() {
-        this.getEventListSubscriber = getEventListSubscriber();
-    }
-
-    public void onStop() {
-        getEventListInteractor.unsubscribe();
-        addEventInteractor.unsubscribe();
-    }
 
 }

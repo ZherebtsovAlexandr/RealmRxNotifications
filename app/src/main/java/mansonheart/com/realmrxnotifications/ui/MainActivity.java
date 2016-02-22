@@ -43,6 +43,7 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
         ButterKnife.inject(this);
         setSupportActionBar(toolbar);
         eventsAdapter = new EventsAdapter(this);
+        eventsAdapter.setOnItemClickListener(event -> presenter.onEventClicked(event));
         listView.setAdapter(eventsAdapter);
         fab.setOnClickListener(view -> presenter.addEvent());
     }
@@ -93,4 +94,5 @@ public class MainActivity extends MvpActivity<EventsView, EventsPresenter>
     public void eventsLoaded(List<Event> events) {
         eventsAdapter.setItems(events);
     }
+
 }

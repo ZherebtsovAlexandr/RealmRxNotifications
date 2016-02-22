@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.Collections;
@@ -17,9 +18,16 @@ import mansonheart.com.realmrxnotifications.model.Event;
  * Created by Zherebtsov Alexandr on 08.01.2016.
  */
 public final class EventsAdapter extends BaseAdapter {
+
+    public interface OnItemClickListener {
+        void onEventItemClicked(Event event);
+    }
+
     private final LayoutInflater inflater;
 
     private List<Event> items = Collections.emptyList();
+
+    private OnItemClickListener onItemClickListener;
 
     public EventsAdapter(Context context) {
         inflater = LayoutInflater.from(context);
@@ -45,6 +53,10 @@ public final class EventsAdapter extends BaseAdapter {
         return getItem(position).getEventId();
     }
 
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -52,6 +64,7 @@ public final class EventsAdapter extends BaseAdapter {
             ViewHolder holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.category = (TextView) convertView.findViewById(R.id.category);
+            holder.container = (LinearLayout) convertView.findViewById(R.id.container);
             convertView.setTag(holder);
         }
 
@@ -62,11 +75,17 @@ public final class EventsAdapter extends BaseAdapter {
                 ? item.getCategory().getName() : "";
         holder.title.setText(title);
         holder.category.setText(category);
+        holder.container.setOnClickListener(v -> {
+            if (EventsAdapter.this.onItemClickListener != null) {
+                EventsAdapter.this.onItemClickListener.onEventItemClicked(item);
+            }
+        });
         return convertView;
     }
 
     public static class ViewHolder {
         TextView title;
         TextView category;
+        LinearLayout container;
     }
 }
