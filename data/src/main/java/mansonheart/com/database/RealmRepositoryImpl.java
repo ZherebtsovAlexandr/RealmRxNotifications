@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import javax.inject.Provider;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -29,16 +30,16 @@ public class RealmRepositoryImpl implements RealmRepository {
 
     @Override
     public <T> Observable<T> get(Class clazz, Func1<RealmQuery, RealmQuery> predicate) {
-        BehaviorSubject<T> behaviorSubject = BehaviorSubject.create((T) getInner(clazz, predicate));
-        realmQueryCollection.add(clazz, predicate, behaviorSubject);
+        RealmResults results = getInner(clazz, predicate);
+        BehaviorSubject<T> behaviorSubject = BehaviorSubject.create((T) results);
+        RealmChangeListener realmChangeListener = () -> {
+            RealmResults realmResults = getInner(clazz, predicate);
+            realmResults.load();
+            behaviorSubject.onNext((T) realmResults);
+        };
+        results.addChangeListener(realmChangeListener);
+        realmQueryCollection.add(clazz, predicate, realmChangeListener, behaviorSubject);
         return behaviorSubject;
-    }
-
-    public <T extends RealmObject> RealmResults<T> getInner(Class clazz, Func1<RealmQuery, RealmQuery> predicate) {
-        RealmQuery query = getRealm().where(clazz);
-        if (predicate != null)
-            query = predicate.call(query);
-        return query.findAllAsync();
     }
 
     @Override
@@ -46,7 +47,7 @@ public class RealmRepositoryImpl implements RealmRepository {
         getRealm().beginTransaction();
         getRealm().createOrUpdateObjectFromJson(clazz, jsonObject);
         getRealm().commitTransaction();
-        notifyObservers(clazz);
+        checkObservers(clazz);
     }
 
     @Override
@@ -54,7 +55,7 @@ public class RealmRepositoryImpl implements RealmRepository {
         getRealm().beginTransaction();
         getRealm().createOrUpdateAllFromJson(clazz, jsonArray);
         getRealm().commitTransaction();
-        notifyObservers(clazz);
+        checkObservers(clazz);
     }
 
 
@@ -65,19 +66,22 @@ public class RealmRepositoryImpl implements RealmRepository {
             action.call();
         }).doOnNext(o -> {
             getRealm().commitTransaction();
-            notifyObservers(clazz);
+            checkObservers(clazz);
         });
     }
 
-    private void notifyObservers(Class clazz) {
+    private <T extends RealmObject> RealmResults<T> getInner(Class clazz, Func1<RealmQuery, RealmQuery> predicate) {
+        RealmQuery query = getRealm().where(clazz);
+        if (predicate != null)
+            query = predicate.call(query);
+        return query.findAllAsync();
+    }
+
+    private void checkObservers(Class clazz) {
         Observable.from(realmQueryCollection.getQuerables(clazz))
                 .subscribe(realmQuerable -> {
                     if (!realmQuerable.getSubject().hasObservers()) {
                         realmQueryCollection.queryables.remove(realmQuerable);
-                    } else {
-                        RealmResults realmResults = getInner(clazz, realmQuerable.getPredicate());
-                        realmResults.load();
-                        realmQuerable.getSubject().onNext(realmResults);
                     }
                 });
     }

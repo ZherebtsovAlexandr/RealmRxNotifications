@@ -3,6 +3,7 @@ package mansonheart.com.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmQuery;
 import rx.Observable;
 import rx.functions.Func1;
@@ -27,8 +28,11 @@ public class RealmQueryableCollection {
         return filtered;
     }
 
-    public void add(Class clazz, Func1<RealmQuery, RealmQuery> predicate, BehaviorSubject subject) {
-        RealmQueryable realmQuerable = new RealmQueryable(clazz, predicate, subject);
+    public void add(Class clazz,
+                    Func1<RealmQuery, RealmQuery> predicate,
+                    RealmChangeListener realmChangeListener,
+                    BehaviorSubject subject) {
+        RealmQueryable realmQuerable = new RealmQueryable(clazz, predicate, realmChangeListener, subject);
         queryables.add(realmQuerable);
     }
 
