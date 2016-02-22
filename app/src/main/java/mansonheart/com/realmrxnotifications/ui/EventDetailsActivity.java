@@ -4,11 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.Toolbar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hannesdorfmann.mosby.mvp.MvpActivity;
 
 import butterknife.ButterKnife;
+import butterknife.InjectView;
 import mansonheart.com.realmrxnotifications.App;
 import mansonheart.com.realmrxnotifications.R;
 import mansonheart.com.realmrxnotifications.di.components.DaggerEventDetailComponent;
@@ -29,6 +32,13 @@ public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDet
     private int eventId;
     private EventDetailComponent component;
 
+    @InjectView(R.id.toolbar)
+    Toolbar toolbar;
+
+    @InjectView(R.id.tv_category)
+    TextView tvCategory;
+
+
     public static Intent getIntent(Context context, int eventId) {
         Intent intent = new Intent(context, EventDetailsActivity.class);
         intent.putExtra(INTENT_EXTRA_PARAM_EVENT_ID, eventId);
@@ -39,8 +49,8 @@ public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
-
         ButterKnife.inject(this);
+        setSupportActionBar(toolbar);
     }
 
     @Override
@@ -90,6 +100,7 @@ public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDet
 
     @Override
     public void eventLoaded(Event event) {
-
+        toolbar.setTitle(event.getTitle());
+        tvCategory.setText(event.getCategory().getName());
     }
 }
