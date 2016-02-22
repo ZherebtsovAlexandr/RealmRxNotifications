@@ -40,12 +40,6 @@ public class EventsPresenter extends MvpBasePresenter<EventsView> {
         addEventInteractor.execute(addEventSubscriber);
     }
 
-    public void onEventClicked(Event event) {
-        if (isViewAttached()) {
-            getView().showMessage(event.getTitle());
-        }
-    }
-
     public void onResume() {
         this.getEventListSubscriber = getEventListSubscriber();
     }
