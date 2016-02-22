@@ -39,7 +39,7 @@ public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDet
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_details);
-        this.eventId = getIntent().getIntExtra(INTENT_EXTRA_PARAM_EVENT_ID, -1);
+
         ButterKnife.inject(this);
     }
 
@@ -59,6 +59,7 @@ public class EventDetailsActivity extends MvpActivity<EventDetailsView, EventDet
     @NonNull
     @Override
     public EventDetailsPresenter createPresenter() {
+        this.eventId = getIntent().getIntExtra(INTENT_EXTRA_PARAM_EVENT_ID, -1);
         injectDependencies();
         return component.presenter();
     }
