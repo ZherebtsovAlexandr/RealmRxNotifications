@@ -27,7 +27,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/retrolambda/debug" />
     <output-test url="file://$MODULE_DIR$/build/retrolambda/debugAndroidTest" />
     <exclude-output />
@@ -90,7 +90,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 23 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="realm-android-0.87.1" level="project" />
+    <orderEntry type="library" exported="" name="realm-android-0.87.4" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
     <orderEntry type="library" exported="" name="javax.inject-1" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-23.1.1" level="project" />
