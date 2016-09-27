@@ -28,8 +28,9 @@ public class RealmModule {
     }
 
     private void initRealm() {
+        Realm.init(application.getApplicationContext());
         RealmConfiguration realmConfiguration
-                = new RealmConfiguration.Builder(application.getApplicationContext())
+                = new RealmConfiguration.Builder()
                 .schemaVersion(1)
                 .deleteRealmIfMigrationNeeded()
                 .build();
